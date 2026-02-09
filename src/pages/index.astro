@@ -1,0 +1,137 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="zhanqian - 博客">
+	<div class="posts">
+    <header class="header">
+      <h1 class="title">文章</h1>
+      <p class="subtitle">技术积累 | 知识沉淀</p>
+    </header>
+
+    <div class="post-list">
+      {posts.map((post) => (
+        <a href={`/blog/${post.slug}/`} class="post-card">
+          <article>
+            <h2 class="post-title">{post.data.title}</h2>
+            <p class="post-desc">{post.data.description}</p>
+            <div class="post-meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+              {post.data.tags.length > 0 && (
+                <div class="tags">
+                  {post.data.tags.map((tag) => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        </a>
+      ))}
+    </div>
+
+    {posts.length === 0 && (
+      <div class="empty">
+        <p>暂无文章</p>
+        <p class="hint">在 src/content/blog/ 目录下添加 Markdown 文件即可</p>
+      </div>
+    )}
+  </div>
+</Layout>
+
+<style>
+  .posts {
+    padding-top: 20px;
+  }
+
+  .header {
+    margin-bottom: 48px;
+  }
+
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #888;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .post-card {
+    display: block;
+    padding: 24px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    transition: all 0.2s ease;
+  }
+
+  .post-card:hover {
+    border-color: #ccc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  .post-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+  }
+
+  .post-desc {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: #999;
+  }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tag {
+    color: #666;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 80px 0;
+    color: #999;
+  }
+
+  .hint {
+    font-size: 13px;
+    margin-top: 8px;
+    color: #bbb;
+  }
+</style>
