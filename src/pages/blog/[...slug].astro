@@ -101,6 +101,17 @@ const { Content } = await post.render();
     color: #333;
   }
 
+  .content :global(a) {
+    color: #2563eb;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .content :global(a:hover) {
+    border-bottom-color: #2563eb;
+  }
+
   .content :global(h2) {
     font-size: 24px;
     font-weight: 600;
