@@ -144,54 +144,62 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
 
   .post-card {
     display: block;
-    padding: 32px;
+    padding: 28px 32px;
     background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
     transition: all 0.2s ease;
   }
 
   .post-card:hover {
-    border-color: #d0d0d0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-color: #d5d5d5;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  .post-card article {
+    display: block;
   }
 
   .post-title {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     color: #1a1a1a;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   .post-desc {
-    font-size: 15px;
+    font-size: 14px;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     line-height: 1.6;
   }
 
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 16px;
-    font-size: 14px;
-    color: #999;
+    gap: 12px;
+    font-size: 13px;
+    color: #aaa;
+  }
+
+  .post-meta time {
+    color: #aaa;
   }
 
   .tags {
     display: flex;
-    gap: 12px;
+    gap: 8px;
   }
 
   .tag {
-    color: #888;
-    font-size: 14px;
+    color: #aaa;
+    font-size: 13px;
     transition: color 0.2s;
   }
 
   .tag:hover {
-    color: #555;
+    color: #666;
   }
 
   .tag.active {
