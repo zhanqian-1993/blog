@@ -1,38 +1,33 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const allPosts = await getCollection('blog');
-const tag = Astro.url.searchParams.get('tag');
+const { tag } = Astro.params;
 
+const allPosts = await getCollection('blog');
 const posts = allPosts
-  .filter((post) => !tag || (post.data.tags && post.data.tags.includes(tag)))
+  .filter((post) => post.data.tags && post.data.tags.includes(tag))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // 获取所有标签
 const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
+
+if (!tag) {
+  return Astro.redirect('/404');
+}
 ---
 
-<Layout title="zhanqian - 博客">
+<Layout title={`#${tag} - 标签 - 博客`}>
 	<div class="posts">
     <header class="header">
-      <h1 class="title">文章</h1>
-      <p class="subtitle">技术积累 | 知识沉淀</p>
+      <h1 class="title">标签: #{tag}</h1>
+      <p class="subtitle">共 {posts.length} 篇文章</p>
 
-      {tag && (
-        <div class="filter-bar">
-          <span class="filter-label">筛选标签: <strong>#{tag}</strong></span>
-          <a href="/" class="clear-filter">清除筛选</a>
-        </div>
-      )}
-
-      {!tag && allTags.length > 0 && (
-        <div class="tag-cloud">
-          {allTags.map((t) => (
-            <a href={`/?tag=${t}`} class="tag-link">{t}</a>
-          ))}
-        </div>
-      )}
+      <div class="tag-cloud">
+        {allTags.map((t) => (
+          <a href={`/tags/${t}`} class:list={["tag-link", { active: t === tag }]}>{t}</a>
+        ))}
+      </div>
     </header>
 
     <div class="post-list">
@@ -52,7 +47,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
               {post.data.tags.length > 0 && (
                 <div class="tags">
                   {post.data.tags.map((t) => (
-                    <a href={`/tags/${t}`} class="tag" class:list={{ active: t === tag }}>#{t}</a>
+                    <span class:list={["tag", { active: t === tag }]}>#{t}</span>
                   ))}
                 </div>
               )}
@@ -62,15 +57,14 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
       ))}
     </div>
 
-    {posts.length === 0 ? (
+    {posts.length === 0 && (
       <div class="empty">
-        <p>{tag ? `没有找到标签 #${tag} 的文章` : '暂无文章'}</p>
-        {tag && <a href="/" class="back-link">返回全部文章</a>}
-        {!tag && <p class="hint">在 src/content/blog/ 目录下添加 Markdown 文件即可</p>}
+        <p>暂无文章</p>
+        <a href="/" class="back-link">返回首页</a>
       </div>
-    ) : (
-      tag && <a href="/" class="show-all">显示全部文章</a>
     )}
+
+    <a href="/" class="back-to-all">← 返回全部文章</a>
   </div>
 </Layout>
 
@@ -84,7 +78,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   }
 
   .title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
     letter-spacing: -0.5px;
@@ -93,31 +87,10 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   .subtitle {
     font-size: 14px;
     color: #888;
-  }
-
-  .filter-bar {
-    margin-top: 16px;
-    padding: 12px 16px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .filter-label {
-    font-size: 14px;
-    color: #666;
-  }
-
-  .clear-filter {
-    font-size: 13px;
-    color: #666;
-    text-decoration: underline;
+    margin-bottom: 16px;
   }
 
   .tag-cloud {
-    margin-top: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -135,6 +108,11 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   .tag-link:hover {
     background: #e0e0e0;
     color: #333;
+  }
+
+  .tag-link.active {
+    background: #2563eb;
+    color: #fff;
   }
 
   .post-list {
@@ -200,16 +178,24 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
     color: #999;
   }
 
-  .back-link, .show-all {
-    display: inline-block;
-    margin-top: 16px;
+  .back-link {
     color: #2563eb;
     text-decoration: underline;
   }
 
-  .hint {
-    font-size: 13px;
-    margin-top: 8px;
-    color: #bbb;
+  .back-to-all {
+    display: inline-block;
+    margin-top: 32px;
+    padding: 12px 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.2s;
+  }
+
+  .back-to-all:hover {
+    background: #e8e8e8;
+    color: #333;
   }
 </style>
