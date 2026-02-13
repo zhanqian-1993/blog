@@ -19,20 +19,6 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
       <h1 class="title">文章</h1>
       <p class="subtitle">技术积累 | 知识沉淀</p>
 
-      {!tag && allTags.length > 0 && (
-        <div class="tag-cloud">
-          {allTags.map((t) => (
-            <a href={`/?tag=${t}`} class="tag-link">{t}</a>
-          ))}
-        </div>
-      )}
-
-      {tag && (
-        <div class="filter-bar">
-          <span class="filter-label">筛选: <strong>{tag}</strong></span>
-          <a href="/" class="clear-filter">清除</a>
-        </div>
-      )}
     </header>
 
     <div class="post-list">
