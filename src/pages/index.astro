@@ -19,13 +19,6 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
       <h1 class="title">文章</h1>
       <p class="subtitle">技术积累 | 知识沉淀</p>
 
-      {tag && (
-        <div class="filter-bar">
-          <span class="filter-label">筛选标签: <strong>#{tag}</strong></span>
-          <a href="/" class="clear-filter">清除筛选</a>
-        </div>
-      )}
-
       {!tag && allTags.length > 0 && (
         <div class="tag-cloud">
           {allTags.map((t) => (
@@ -33,43 +26,45 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
           ))}
         </div>
       )}
+
+      {tag && (
+        <div class="filter-bar">
+          <span class="filter-label">筛选: <strong>{tag}</strong></span>
+          <a href="/" class="clear-filter">清除</a>
+        </div>
+      )}
     </header>
 
     <div class="post-list">
       {posts.map((post) => (
         <a href={`/blog/${post.slug}/`} class="post-card">
-          <article>
-            <h2 class="post-title">{post.data.title}</h2>
-            <p class="post-desc">{post.data.description}</p>
-            <div class="post-meta">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('zh-CN', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-              {post.data.tags.length > 0 && (
-                <div class="tags">
-                  {post.data.tags.map((t) => (
-                    <a href={`/tags/${t}`} class="tag" class:list={{ active: t === tag }}>#{t}</a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </article>
+          <h2 class="post-title">{post.data.title}</h2>
+          <p class="post-desc">{post.data.description}</p>
+          <div class="post-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </time>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="tags">
+                {post.data.tags.map((t) => (
+                  <span class="tag">#{t}</span>
+                ))}
+              </div>
+            )}
+          </div>
         </a>
       ))}
     </div>
 
-    {posts.length === 0 ? (
+    {posts.length === 0 && (
       <div class="empty">
-        <p>{tag ? `没有找到标签 #${tag} 的文章` : '暂无文章'}</p>
-        {tag && <a href="/" class="back-link">返回全部文章</a>}
-        {!tag && <p class="hint">在 src/content/blog/ 目录下添加 Markdown 文件即可</p>}
+        <p>{tag ? `没有找到标签 "${tag}" 的文章` : '暂无文章'}</p>
+        {tag && <a href="/" class="back-link">返回全部</a>}
       </div>
-    ) : (
-      tag && <a href="/" class="show-all">显示全部文章</a>
     )}
   </div>
 </Layout>
@@ -80,19 +75,37 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   }
 
   .header {
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
 
   .title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     letter-spacing: -0.5px;
   }
 
   .subtitle {
-    font-size: 15px;
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 0;
+  }
+
+  .tag-cloud {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .tag-link {
+    font-size: 14px;
     color: #888;
+    transition: color 0.2s;
+  }
+
+  .tag-link:hover {
+    color: #333;
   }
 
   .filter-bar {
@@ -108,38 +121,19 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   }
 
   .clear-filter {
-    font-size: 14px;
+    font-size: 13px;
     color: #999;
-    text-decoration: none;
-    border-bottom: 1px solid #ddd;
+    text-decoration: underline;
   }
 
   .clear-filter:hover {
-    color: #666;
-    border-bottom-color: #666;
-  }
-
-  .tag-cloud {
-    margin-top: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .tag-link {
-    font-size: 14px;
-    color: #888;
-    transition: color 0.2s;
-  }
-
-  .tag-link:hover {
-    color: #1a1a1a;
+    color: #333;
   }
 
   .post-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
   }
 
   .post-card {
@@ -148,22 +142,18 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
     background: #fff;
     border: 1px solid #e8e8e8;
     border-radius: 8px;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
   }
 
   .post-card:hover {
-    border-color: #d5d5d5;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-
-  .post-card article {
-    display: block;
+    border-color: #ccc;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
 
   .post-title {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     color: #1a1a1a;
     line-height: 1.5;
   }
@@ -178,7 +168,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     font-size: 13px;
     color: #aaa;
   }
@@ -195,39 +185,23 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   .tag {
     color: #aaa;
     font-size: 13px;
-    transition: color 0.2s;
-  }
-
-  .tag:hover {
-    color: #666;
-  }
-
-  .tag.active {
-    color: #1a1a1a;
   }
 
   .empty {
     text-align: center;
-    padding: 80px 0;
+    padding: 60px 0;
     color: #999;
   }
 
-  .back-link, .show-all {
+  .back-link {
     display: inline-block;
-    margin-top: 24px;
+    margin-top: 16px;
     color: #666;
     font-size: 14px;
-    border-bottom: 1px solid #ddd;
+    text-decoration: underline;
   }
 
-  .back-link:hover, .show-all:hover {
-    color: #1a1a1a;
-    border-bottom-color: #1a1a1a;
-  }
-
-  .hint {
-    font-size: 13px;
-    margin-top: 8px;
-    color: #bbb;
+  .back-link:hover {
+    color: #333;
   }
 </style>
