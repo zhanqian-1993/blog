@@ -80,18 +80,18 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   }
 
   .header {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
 
   .title {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     letter-spacing: -0.5px;
   }
 
   .subtitle {
-    font-size: 14px;
+    font-size: 15px;
     color: #888;
   }
 
@@ -128,7 +128,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
 
   .tag-link {
     font-size: 14px;
-    color: #666;
+    color: #888;
     transition: color 0.2s;
   }
 
@@ -139,57 +139,59 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
   .post-list {
     display: flex;
     flex-direction: column;
+    gap: 20px;
   }
 
   .post-card {
     display: block;
-    padding: 20px 0;
-    border-bottom: 1px solid #e8e8e8;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
     transition: all 0.2s ease;
   }
 
   .post-card:hover {
-    opacity: 0.7;
-  }
-
-  .post-card:first-child {
-    padding-top: 0;
+    border-color: #d0d0d0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
 
   .post-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 12px;
     color: #1a1a1a;
+    line-height: 1.4;
   }
 
   .post-desc {
-    font-size: 14px;
+    font-size: 15px;
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     line-height: 1.6;
   }
 
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 13px;
+    gap: 16px;
+    font-size: 14px;
     color: #999;
   }
 
   .tags {
     display: flex;
-    gap: 8px;
+    gap: 12px;
   }
 
   .tag {
-    color: #999;
-    font-size: 13px;
+    color: #888;
+    font-size: 14px;
+    transition: color 0.2s;
   }
 
   .tag:hover {
-    color: #666;
+    color: #555;
   }
 
   .tag.active {
