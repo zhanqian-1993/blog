@@ -16,9 +16,14 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
 <Layout title="zhanqian - 博客">
 	<div class="posts">
     <header class="header">
-      <h1 class="title">文章</h1>
-      <p class="subtitle">技术积累 | 知识沉淀</p>
-
+      <div class="search-box">
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="搜索文章标题..." 
+          class="search-input"
+        />
+      </div>
     </header>
 
     <div class="post-list">
@@ -75,6 +80,30 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
     font-size: 14px;
     color: #999;
     margin-bottom: 0;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s;
+    background: #fff;
+  }
+
+  .search-input:focus {
+    border-color: #999;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+  }
+
+  .search-input::placeholder {
+    color: #aaa;
   }
 
   .tag-cloud {
@@ -191,3 +220,22 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
     color: #333;
   }
 </style>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const postCards = document.querySelectorAll('.post-card');
+
+  searchInput?.addEventListener('input', (e) => {
+    const searchTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    
+    postCards.forEach((card) => {
+      const title = card.querySelector('.post-title')?.textContent?.toLowerCase() || '';
+      
+      if (title.includes(searchTerm)) {
+        (card as HTMLElement).style.display = 'block';
+      } else {
+        (card as HTMLElement).style.display = 'none';
+      }
+    });
+  });
+</script>
